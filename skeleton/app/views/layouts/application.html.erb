@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NinetyNineCats</title>
+    
+    <link href='https://fonts.googleapis.com/css?family=Dekko' rel='stylesheet'>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+
+  <body>    
+    <header>
+      <% if !!current_user %>
+        <h2> Welcome <%= current_user.username %>! </h2>  
+    <% end %>
+    </header>
+
+  
+    
+    <% if flash[:errors] %>
+      <% flash[:errors].each do |error| %>
+        <ul>
+          <li> <%= error %> </li>
+        </ul>
+      <% end %>
+    <% end %>
+    
+    <%= yield %>
+    
+    <footer>
+      <br><br>
+      <% if !!current_user %>
+        <form action="<%= session_url %>" method="post">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type='hidden' name='_method' value="delete">
+          <input type='submit' value='Logout'>
+        </form>
+    <% else %>
+        <form action="<%= new_session_url %>" method="post">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type='hidden' name='_method' value="get">
+          <input type='submit' value='Login'>
+        </form>
+    <% end %>
+        <br><br>
+      <a href=" <%= cats_url %> "> All Cats</a>
+      <br><br>
+      <% if !!current_user %>
+        <a href=" <%= new_cat_rental_request_url %> "> New rental request</a>
+        <a href=" <%= user_cats_url(current_user) %> ">My cats</a>
+        <% end %>
+    </footer>
+    
+  </body>
+</html>
